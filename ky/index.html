@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>人工智能模型全生命周期版权保护系统</title>
+<link rel="stylesheet" href="css/style.css">
+<!-- ECharts 5.x CDN -->
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<script src="js/data.js"></script>
+</head>
+<body>
+<div class="app">
+  <!-- 左侧导航 -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">🛡️</div>
+      <div class="logo-text">
+        <div class="logo-title">版权保护系统</div>
+        <div class="logo-sub">全生命周期</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="#/overview" class="nav-item" data-route="overview"><span class="nav-icon">📊</span>系统概览</a>
+      <a href="#/dataset" class="nav-item" data-route="dataset"><span class="nav-icon">🗄️</span>数据集版权保护</a>
+      <a href="#/model" class="nav-item" data-route="model"><span class="nav-icon">🧠</span>模型版权保护</a>
+      <a href="#/aigc" class="nav-item" data-route="aigc"><span class="nav-icon">🎨</span>AIGC生成内容</a>
+      <a href="#/summary" class="nav-item" data-route="summary"><span class="nav-icon">📋</span>系统测试总结</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="env-tag">CIFAR-10 · ResNet-18</div>
+      <div class="env-tag">Stable Diffusion 2.1-base</div>
+    </div>
+  </aside>
+
+  <!-- 主内容区 -->
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-title" id="pageTitle">系统概览</div>
+      <div class="topbar-breadcrumb" id="breadcrumb">首页 / 系统概览</div>
+    </header>
+    <div class="content" id="content"><!-- 由 app.js 渲染 --></div>
+  </main>
+</div>
+
+<!-- ============ 概览页 ============ -->
+<template id="tpl-overview">
+  <section class="hero">
+    <h1 class="hero-title">人工智能模型全生命周期版权保护系统</h1>
+    <p class="hero-sub">AI Model Full-Lifecycle Copyright Protection System</p>
+    <p class="hero-desc">涵盖"数据 → 模型 → 生成内容"全路径的版权确权与侵权监测，实现从源头数据到终端产出的全生命周期版权追踪与保护</p>
+  </section>
+  <section class="section">
+    <h2 class="section-title">全生命周期闭环</h2>
+    <div class="lifecycle-flow" id="lifecycleFlow"></div>
+  </section>
+  <section class="section">
+    <h2 class="section-title">三大核心模块</h2>
+    <div class="module-cards" id="moduleCards"></div>
+  </section>
+  <section class="section">
+    <h2 class="section-title">测试环境</h2>
+    <div class="metric-cards">
+      <div class="metric-card"><div class="metric-label">CPU</div><div class="metric-value">i5-13500H</div><div class="metric-note">16线程</div></div>
+      <div class="metric-card"><div class="metric-label">内存</div><div class="metric-value">32 GB</div></div>
+      <div class="metric-card"><div class="metric-label">GPU</div><div class="metric-value">RTX 3050</div><div class="metric-note">Laptop 核显</div></div>
+      <div class="metric-card"><div class="metric-label">系统</div><div class="metric-value">Windows</div></div>
+      <div class="metric-card"><div class="metric-label">Python</div><div class="metric-value">3.13</div></div>
+      <div class="metric-card"><div class="metric-label">深度学习</div><div class="metric-value">PyTorch 2.12</div></div>
+    </div>
+  </section>
+</template>
+
+<!-- ============ 数据集版权保护 ============ -->
+<template id="tpl-dataset">
+  <div class="module-header">
+    <div>
+      <h1 class="module-title">数据集版权保护</h1>
+      <p class="module-sub">Untargeted Backdoor Watermark · CIFAR-10 / ResNet-18</p>
+    </div>
+    <div class="module-tag">复现论文：UBW</div>
+  </div>
+  <p class="module-intro">针对训练数据易被非法采集使用的问题，基于非定向后门水印(UBW)实现数据集指纹嵌入与溯源。从有效性、无害性、隐蔽性三维度评测，并验证版权确权与抗攻击能力。</p>
+
+  <!-- 子标签 -->
+  <div class="subtabs" id="datasetTabs">
+    <button class="subtab active" data-sub="eff">水印有效性</button>
+    <button class="subtab" data-sub="harm">无害性</button>
+    <button class="subtab" data-sub="stealth">隐蔽性</button>
+    <button class="subtab" data-sub="verify">版权验证</button>
+    <button class="subtab" data-sub="anti">抗攻击</button>
+  </div>
+
+  <!-- 水印有效性 -->
+  <div class="subpane active" data-sub="eff">
+    <div class="chart-card">
+      <div class="card-head"><h3>各水印方法性能对比</h3><span class="card-src">图3.1 · CIFAR-10/ResNet-18</span></div>
+      <div class="chart" id="ds-eff-chart"></div>
+      <div class="card-note">BA=干净测试集准确率；ASR-A=全体中毒样本攻击成功率；ASR-C=干净样本中被正确分类样本的攻击成功率。基线ASR为自然误分类率(约13~18%)作参照。</div>
+    </div>
+    <div class="metric-cards">
+      <div class="metric-card"><div class="metric-label">UBW-C BA</div><div class="metric-value">88.26%</div><div class="metric-note">论文 86.99%</div></div>
+      <div class="metric-card"><div class="metric-label">UBW-C ASR-A</div><div class="metric-value">88.40%</div><div class="metric-note">论文 89.80%</div></div>
+      <div class="metric-card"><div class="metric-label">BadNets ASR</div><div class="metric-value">100%</div><div class="metric-note">定向后门</div></div>
+      <div class="metric-card"><div class="metric-label">复现误差</div><div class="metric-value">≤1.3pp</div><div class="metric-note">基础训练无误</div></div>
+    </div>
+  </div>
+
+  <!-- 无害性 -->
+  <div class="subpane" data-sub="harm">
+    <div class="chart-card">
+      <div class="card-head"><h3>平均预测分散性 Dp</h3><span class="card-src">图3.2</span></div>
+      <div class="chart" id="ds-dp-chart"></div>
+      <div class="card-note">Dp越接近理论上限ln10=2.303，预测越分散。BadNets Dp=0(全部判到同一目标类，可被恶意利用)；UBW-P/UBW-C触发让模型出错但错到哪类不可预测，这正是"无害"性质。</div>
+    </div>
+    <div class="chart-card">
+      <div class="card-head"><h3>真实类→预测类分布热力图</h3><span class="card-src">图3.3 · 带触发器测试样本</span></div>
+      <div class="chart" id="ds-heatmap-chart"></div>
+      <div class="card-note">颜色越亮表示该真实类样本被判到该预测类的比例越高。BadNets表现为一整列高亮(全部指向同一目标类)；UBW表现为沿对角线弥散(分散判到多个类别，无可利用固定映射)。</div>
+    </div>
+  </div>
+
+  <!-- 隐蔽性 -->
+  <div class="subpane" data-sub="stealth">
+    <div class="chart-card">
+      <div class="card-head"><h3>数据集发布前后训练样本对比</h3><span class="card-src">图3.4 · UBW-C</span></div>
+      <div class="img-triptych" id="ds-stealth-img"></div>
+      <div class="card-note">第一列干净样本；第二列UBW-C实际发布的中毒样本(肉眼完全一致，clean-label)；第三列扰动放大8倍后勉强可见。UBW-P右下角有明显3×3黑白方块且标签一致率仅9.9%。</div>
+    </div>
+    <div class="chart-card">
+      <div class="card-head"><h3>UBW-C 样本扰动幅度分布</h3><span class="card-src">图3.5 · 5000中毒样本</span></div>
+      <div class="chart" id="ds-perturb-chart"></div>
+      <div class="card-note">全部5000个中毒样本逐像素最大扰动都恰好顶到约束边界ε=16/255(红线)，双层优化把可用扰动用满。</div>
+    </div>
+    <div class="metric-cards">
+      <div class="metric-card"><div class="metric-label">约束边界 ε</div><div class="metric-value">16/255</div><div class="metric-note">≈0.0627</div></div>
+      <div class="metric-card"><div class="metric-label">平均 ℓ₂ 范数</div><div class="metric-value">2.49</div></div>
+      <div class="metric-card"><div class="metric-label">平均 PSNR</div><div class="metric-value">27.0 dB</div><div class="metric-note">26.3~28.6</div></div>
+      <div class="metric-card"><div class="metric-label">UBW-P 标签一致率</div><div class="metric-value">9.9%</div><div class="metric-note">人工可检出</div></div>
+    </div>
+  </div>
+
+  <!-- 版权验证 -->
+  <div class="subpane" data-sub="verify">
+    <div class="chart-card">
+      <div class="card-head"><h3>成对T检验数据集版权验证</h3><span class="card-src">图3.6 · m=100, τ=0.25</span></div>
+      <div class="chart" id="ds-verify-chart"></div>
+      <div class="card-note">取100个被可疑模型正确分类的源类干净样本，比较真实标签预测概率Pb与加触发器后Pp，检验H₀:Pb=Pp+τ。拒绝H₀则判定模型使用了受保护数据集。</div>
+    </div>
+    <div class="chart-card">
+      <div class="card-head"><h3>验证结果明细表</h3></div>
+      <div class="table-wrap" id="ds-verify-table"></div>
+      <div class="card-note">恶意盗用场景ΔP均远高于阈值0.25，p值低至10⁻³²~10⁻³⁹，高置信度认定盗用；独立模型/独立触发器场景ΔP≈0、p=1.0000，不会误判正常模型。</div>
+    </div>
+  </div>
+
+  <!-- 抗攻击 -->
+  <div class="subpane" data-sub="anti">
+    <div class="chart-card">
+      <div class="card-head"><h3>抵抗微调：水印残留与干净精度</h3><span class="card-src">图3.7 · 10 epoch</span></div>
+      <div class="chart" id="ds-finetune-chart"></div>
+      <div class="card-note">UBW-C微调后水印有所削弱但仍显著高于随机水平，BA稳定在89~90%；UBW-P 10%微调后ASR-C骤降到14.08%但BA同时下降，"杀敌一千自损八百"。</div>
+    </div>
+    <div class="chart-card">
+      <div class="card-head"><h3>抵抗模型剪枝：全局幅度剪枝</h3><span class="card-src">图3.8</span></div>
+      <div class="chart" id="ds-prune-chart"></div>
+      <div class="card-note">UBW-C剪50%权重ASR-C仅降到81.89%，70%后仍有74.89%；UBW-P剪枝后ASR-C甚至略升。90%时模型本身被破坏，水印随之失效但对使用者已无价值。</div>
+    </div>
+    <div class="chart-card">
+      <div class="card-head"><h3>抵抗数据集级后门防御</h3><span class="card-src">图3.9 · 10%过滤</span></div>
+      <div class="chart" id="ds-defense-chart"></div>
+      <div class="card-note">SFR=被过滤样本中真实中毒样本比例。随机基线=中毒率10%。UBW-C的SFR仅16.52%/1.93%，几乎等同随机过滤，抗检测性来自"中毒样本特征空间不聚集"。</div>
+    </div>
+  </div>
+</template>
+
+<!-- ============ 模型版权保护 ============ -->
+<template id="tpl-model">
+  <div class="module-header">
+    <div>
+      <h1 class="module-title">模型版权保护</h1>
+      <p class="module-sub">DUO: Division and Union Latent Model Watermarking · CIFAR-10 / ResNet-18</p>
+    </div>
+    <div class="module-tag">复现论文：DUO</div>
+  </div>
+  <p class="module-intro">针对模型易被非法复制窃取的问题，基于DUO(Division and Union)潜在模型水印方案，在模型训练与部署阶段有效嵌入版权信息并验证所有权。完整流程包括水印嵌入、模型分离、模型联合、水印验证四阶段。</p>
+
+  <div class="chart-card">
+    <div class="card-head"><h3>DUO 方法实验流程</h3><span class="card-src">图3-1 · Division-Union</span></div>
+    <div class="duo-flow" id="duo-flow"></div>
+    <div class="card-note">Secret Model完成水印嵌入训练 → Division移除保留参数得到Public Model → Union重组保留参数恢复Union Model。Public Model因密钥参数移除无法验证水印。</div>
+  </div>
+
+  <div class="chart-card">
+    <div class="card-head"><h3>三类模型性能对比</h3><span class="card-src">图3-2 · 训练/测试/水印准确率</span></div>
+    <div class="chart" id="model-compare-chart"></div>
+    <div class="card-note">Secret与Union Model水印准确率均为99.80%；三类模型主任务测试准确率处于63%~65%窄幅区间，波动不超过3个百分点，说明水印嵌入与分离重组对主任务性能影响较小。</div>
+  </div>
+
+  <div class="chart-card">
+    <div class="card-head"><h3>水印验证结果</h3><span class="card-src">图3-3</span></div>
+    <div class="chart" id="model-verify-chart"></div>
+    <div class="card-note">Secret Model与Union Model在水印样本上识别准确率均稳定在99.80%；Division之后的Public Model由于密钥参数被移除无法验证水印，水印能力仅在Union重组后被重新激活。</div>
+  </div>
+
+  <div class="chart-card">
+    <div class="card-head"><h3>主任务性能保持情况</h3><span class="card-src">图3-4</span></div>
+    <div class="chart" id="model-task-chart"></div>
+    <div class="card-note">Secret Model 63.00%，Public Model 65.12%，Union Model 64.25%，整体波动不超过3个百分点。</div>
+  </div>
+
+  <div class="chart-card">
+    <div class="card-head"><h3>DUO潜在模型水印实验结果</h3><span class="card-src">表3-6</span></div>
+    <div class="table-wrap" id="model-table"></div>
+  </div>
+</template>
+
+<!-- ============ AIGC 生成内容 ============ -->
+<template id="tpl-aigc">
+  <div class="module-header">
+    <div>
+      <h1 class="module-title">AIGC 生成内容</h1>
+      <p class="module-sub">Tree-ring Watermark · Stable Diffusion 2.1-base · 512×512</p>
+    </div>
+    <div class="module-tag">复现论文：Tree-ring</div>
+  </div>
+  <p class="module-intro">针对AIGC生成内容难以确权溯源的问题，基于Tree-ring水印在扩散模型初始噪声傅里叶频域注入密钥指纹，对模型输出图片进行自动化版权标记与可靠追溯。本页配置与逐样本结果按本地 tree-ring-watermark 项目 report_exp/outputs 复核。</p>
+  <div class="metric-cards" id="aigc-config"></div>
+
+  <div class="subtabs" id="aigcTabs">
+    <button class="subtab active" data-sub="embed">水印嵌入</button>
+    <button class="subtab" data-sub="detect">水印检测</button>
+    <button class="subtab" data-sub="anti">抗攻击</button>
+  </div>
+
+  <!-- 水印嵌入 -->
+  <div class="subpane active" data-sub="embed">
+    <div class="chart-card">
+      <div class="card-head"><h3>真实样本：无水印 / Tree-ring 水印 / 像素差异 ×8</h3><span class="card-src">tree-ring outputs · fig_diff</span></div>
+      <div class="img-triptych" id="aigc-embed-img"></div>
+      <div class="card-note">来自 tree-ring-watermark/report_exp/outputs 的真实生成结果：样本0~3 左侧为无水印图，中间为 Tree-ring 水印图，右侧为像素差异放大8倍；同一随机初始噪声与提示词下，主体构图保持一致，单看含水印图无可见标记。</div>
+    </div>
+    <div class="chart-card">
+      <div class="card-head"><h3>8组配对样本 MAE 与 PSNR</h3><span class="card-src">图3.2~3.4</span></div>
+      <div class="chart" id="aigc-mae-chart"></div>
+      <div class="card-note">平均像素绝对误差MAE 14.94%(区间4.44~26.16)，平均PSNR 14.56dB(区间9.75~23.55)。Tree-ring不可见性体现在分布层面而非逐像素一致。</div>
+    </div>
+    <div class="metric-cards">
+      <div class="metric-card"><div class="metric-label">平均 MAE</div><div class="metric-value">14.94%</div><div class="metric-note">4.44~26.16</div></div>
+      <div class="metric-card"><div class="metric-label">平均 PSNR</div><div class="metric-value">14.56 dB</div><div class="metric-note">9.75~23.55</div></div>
+      <div class="metric-card"><div class="metric-label">FID 变化</div><div class="metric-value">25.29→25.93</div><div class="metric-note">原论文</div></div>
+      <div class="metric-card"><div class="metric-label">CLIP 分数</div><div class="metric-value">0.363→0.364</div><div class="metric-note">图文一致</div></div>
+    </div>
+  </div>
+
+  <!-- 水印检测 -->
+  <div class="subpane" data-sub="detect">
+    <div class="chart-card">
+      <div class="card-head"><h3>密钥频域图案与反演噪声频谱</h3><span class="card-src">tree-ring outputs · fig_key</span></div>
+      <div class="freq-triptych" id="aigc-freq"></div>
+      <div class="card-note">上排为植入密钥 |F(key)|、无水印/水印图反演噪声频谱；下排为密钥中心区域(r≤10)及两类反演频谱与密钥残差，水印图残差平均54.7，明显低于无水印74.6。</div>
+    </div>
+    <div class="chart-card">
+      <div class="card-head"><h3>检测距离分布与 ROC 曲线</h3><span class="card-src">图3.6 · 干净条件</span></div>
+      <div class="chart" id="aigc-detect-chart"></div>
+      <div class="card-note">含水印图像反演残差与密钥平均距离52.98±2.07，明显小于无水印73.49±1.85。以75.98为零误报阈值，检出率100%，AUC=1.000，1%FPR下TPR=100%。</div>
+    </div>
+  </div>
+
+  <!-- 抗攻击 -->
+  <div class="subpane" data-sub="anti">
+    <div class="chart-card">
+      <div class="card-head"><h3>四类攻击下检测距离与检出率</h3><span class="card-src">图3.7 · 零误报阈值75.98</span></div>
+      <div class="chart" id="aigc-anti-chart"></div>
+      <div class="card-note">JPEG压缩(q25)、高斯模糊(r4)、旋转(75°)、高斯噪声(σ0.1)四类失真下零误报阈值检出率均为100%；水印信息隐藏于生成过程初始噪声频域，与图像内容深度耦合，鲁棒性强，攻击者难以在保持图像可用性前提下消除水印。</div>
+    </div>
+    <div class="metric-cards">
+      <div class="metric-card"><div class="metric-label">JPEG q25</div><div class="metric-value">100%</div><div class="metric-note">距离 64.58</div></div>
+      <div class="metric-card"><div class="metric-label">高斯模糊 r4</div><div class="metric-value">100%</div><div class="metric-note">距离 64.69</div></div>
+      <div class="metric-card"><div class="metric-label">旋转 75°</div><div class="metric-value">100%</div><div class="metric-note">距离 69.23</div></div>
+      <div class="metric-card"><div class="metric-label">高斯噪声 σ0.1</div><div class="metric-value">100%</div><div class="metric-note">距离 70.13</div></div>
+    </div>
+  </div>
+</template>
+
+<!-- ============ 系统测试总结 ============ -->
+<template id="tpl-summary">
+  <div class="module-header">
+    <div>
+      <h1 class="module-title">系统测试总结</h1>
+      <p class="module-sub">3.3 系统测试及功能展示</p>
+    </div>
+  </div>
+  <p class="module-intro">本系统覆盖人工智能模型全生命周期三大阶段，对数据集版权保护、模型版权保护、AIGC生成内容版权追溯进行功能测试与展示，各模块测试结论如下。</p>
+
+  <div class="summary-cards" id="summaryCards"></div>
+
+  <div class="chart-card">
+    <div class="card-head"><h3>全生命周期版权保护闭环</h3></div>
+    <div class="lifecycle-flow" id="summaryFlow"></div>
+  </div>
+
+  <div class="chart-card">
+    <div class="card-head"><h3>核心指标速览</h3></div>
+    <div class="table-wrap" id="summary-table"></div>
+  </div>
+</template>
+
+<script src="js/app.js"></script>
+</body>
+</html>
